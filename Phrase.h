@@ -12,11 +12,26 @@
 
 class Phrase {
 public:
+    myString phrase;
+    int pageNum;
+
+    bool parent;
+    bool child;
     //default constructor
     Phrase(){}
 
     //overload
     Phrase(const myString &phrase, bool parent, bool child, int pageNum): phrase(phrase){}
+
+    //operator
+    Phrase& operator= (const Phrase& cpy)
+    {
+        phrase=cpy.phrase;
+        parent=cpy.parent;
+        child=cpy.child;
+        pageNum=cpy.pageNum;
+        return *this;
+    }
 
     //destr
     ~Phrase() {}
@@ -55,10 +70,6 @@ public:
     }
 
 private:
-    myString phrase;
-    int pageNum;
 
-    bool parent;
-    bool child;
 };
 #endif //INC_20F_AUTO_IDX_PHRASE_H

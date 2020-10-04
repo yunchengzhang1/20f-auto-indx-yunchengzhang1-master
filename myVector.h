@@ -9,6 +9,7 @@
 #define INC_20F_AUTO_IDX_MYVECTOR_H
 
 #include <iostream>
+#include "Phrase.h"
 using namespace std;
 
 
@@ -134,6 +135,8 @@ public:
         return *this;
     }
 
+
+
     //iterator start
     U* begin() const
     {
@@ -148,21 +151,9 @@ public:
 
     //functions:
     //return the # of elements in array after pushing
-    int pushback(U)
-    {
-        if (curr==capacity) {
-            U* buffer=arr;
-            //populate storage space
-            arr= new U[capacity= capacity*2];
-            //http://www.cplusplus.com/reference/algorithm/copy/
-            /*while (first!=last)
-             {*result = *first; ++result; ++first;} */
-            copy(buffer, buffer+curr, arr);
-            delete []buffer;
-        }
-        //put in data
-        arr[curr++]= data;
-        return curr;
+    void pushback(U in){
+        allocate(curr+1);
+        arr[curr++]=data;
     }
 
 

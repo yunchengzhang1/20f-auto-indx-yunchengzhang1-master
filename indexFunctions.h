@@ -48,13 +48,17 @@ public:
     void fillVector(Vector<Phrase>& newPhrase,myString& newWord, bool isParent, int pg) {
 
         //set child bool to default 0
-        //bool isChild=0;
+        bool isChild=false;
 
         //fill in the new object with attributes: myString, bool, bool, int
-        //Phrase PhraseIn(newWord, isChild, isParent, pg);
+        Phrase PhraseObj;
+        PhraseObj.phrase= newWord;
+        PhraseObj.parent= isParent;
+        PhraseObj.child= isChild;
+        PhraseObj.pageNum=pg;
 
-        //push the new phrase object into the vector
-        //newPhrase.pushback(PhraseIn);
+        //push the new phrase object PhraseObj into the vector newPhrase
+        newPhrase.pushback(PhraseObj);
     }
 
     void editP(char* in)
@@ -93,13 +97,14 @@ public:
         //word parsed
         myString parsedWord;
 
+
         //open file input01.txt
         ifstream file("input01.txt");
         char *temp = new char[100];
         char *wordTemp = new char[15];
 
         //DSvector to contain myPhrase
-        //Vector<Phrase> myPhrase;
+        Vector<Phrase> myPhrase;
 
 
         //iterate through file
@@ -136,15 +141,18 @@ public:
                 char* word= strtok(temp," ");
                 while (word!=NULL)
                 {
+                    bool isParent=false;
+
+
                     //if detected parent word, set isParent to 1, pass it
                     if (word[sizeof(word)-1]==')' )
-                    {bool isParent=1;}
+                    {bool isParent=true;}
                     myString tempStr= word;
 
                     cout<<tempStr<<" ";
 
                     //use the fill vector function by providing: targeted vector
-                    //fillVector(myPhrase,tempStr, isParent, page);
+                    fillVector(myPhrase,tempStr, isParent, page);
 
                     //get following words
                     word=strtok(NULL," ");
