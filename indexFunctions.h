@@ -155,6 +155,7 @@ public:
 
         //DSvector to contain myPhrase
         Vector<Phrase> myPhrase;
+        Phrase tempP;
         //int PCounter=0;
 
         //vector<Phrase> phraseVector;
@@ -224,13 +225,17 @@ public:
 
                     //use the fill vector function by providing: targeted vector
                     fillVector(myPhrase,tempStr, isParent, tempPG);
-                    
+
+
+
                     //tempPhrase= fillObject(tempStr, isParent, tempPG);
                     //fillTest(phraseVector, tempStr, isParent, tempPG);
                     //get following words
                     word=strtok(NULL," ");
-                }
+                }//end of word!=NULL loop
 
+                tempP=myPhrase.get(2);
+                cout<<"what is tempP"<<endl;
                 //delete tempPhrase;
             }
 

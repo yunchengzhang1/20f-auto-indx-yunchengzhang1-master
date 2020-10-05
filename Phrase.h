@@ -24,12 +24,12 @@ public:
     Phrase(const myString &phrase, bool parent, bool child, int pageNum): phrase(phrase){}
 
     //operator
-    Phrase& operator= (const Phrase* cpy)
+    Phrase& operator= ( Phrase cpy)
     {
-        phrase=cpy->phrase;
-        parent=cpy->parent;
-        child=cpy->child;
-        pageNum=cpy->pageNum;
+        phrase=cpy.getPhrase();
+        parent=cpy.getParent();
+        child=cpy.getChild();
+        pageNum=getNum();
         return *this;
     }
 
