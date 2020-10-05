@@ -39,7 +39,7 @@ public:
 
 
     //destr
-    ~Phrase() {}
+    ~Phrase()=default;
 
     //dynamic set
     void dymSet (myString newStr, bool newP, bool newC, int newN)

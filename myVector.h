@@ -15,7 +15,6 @@ using namespace std;
 
 template <class U>
 class Vector {
-private:
     //arr is the pointer of whatever passes through T, stores the address of the vector
     U *arr;
     //total storage of the vector
@@ -26,6 +25,7 @@ private:
 
 public:
 
+
     //getters
     //return the capacity
     int getCapacity()
@@ -34,11 +34,7 @@ public:
     int getSize()
     {return curr;}
 
-    //get operator, return the value at index [i]
-    U& operator[](int i)
-    {
-        return *(arr+i);
-    }
+
 
 
 
@@ -97,13 +93,14 @@ public:
         //if size of two, replace old capacity
         if (newCapacity > (capacity*2))
         {capacity= newCapacity;}
+        else {capacity= capacity*2;}
         //make buffer to fill in data
         U *temp1= new U[capacity];
         //copy original arr
         for (unsigned i=0; i<curr; i++)
         {temp1[i]= arr[i];}
         //clear arr
-        delete []arr;
+        delete []arr;  //SIGABRT (aborted)
         //refill arr
         arr= temp1;
     }
@@ -123,6 +120,9 @@ public:
         for (unsigned i=0; i<curr; i++)
         {arr[i]= cpy.arr[i]; }
     }
+
+    ~Vector(){
+        delete[] arr;}
     /*
     Vector(const Vector<Phrase> &cpy) {
         capacity= cpy.capacity;
@@ -171,7 +171,7 @@ public:
     //return the # of elements in array after pushing
     void pushback(U in){
         allocate(curr+1);
-        arr[curr++]=data;
+        arr[curr++]=in;
     }
 
 
@@ -208,6 +208,16 @@ public:
         }
         return (out);
     }
+
+
+    //get operator, return the value at index [i]
+    U& operator[](int i)
+    {
+        return *(arr+i);
+    }
+
+
+
 
     /*
     template <class V>

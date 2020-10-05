@@ -14,7 +14,7 @@
 #include "myVector.h"
 #include "indexFunctions.h"
 #include "Phrase.h"
-
+//#include <vector>
 class indexFunc {
 private:
 
@@ -49,10 +49,6 @@ public:
         //return x.pgNum <y.pgNum;
     }
     */
-    void parsingWord(myString* line,char* wordTemp, int i, int j)  //int i and j are always read as 0
-    {
-
-    }
 
     //https://www.youtube.com/watch?v=iPlW5tSUOUM
     void fillVector(Vector<Phrase>& newPhrase,myString& newWord, bool isParent, int pg) {
@@ -71,10 +67,11 @@ public:
         cout<<"object fill complete"<<endl;
 
         //push the new phrase object PhraseObj into the vector newPhrase
-        //newPhrase.pushback(PhraseObj);
+        newPhrase.pushback(PhraseObj);
+        cout<<endl<<"push complete"<<endl;
     }
-
-    Phrase fillObject(myString& newWord, bool isParent, int pg) {
+    /*
+    void fillTest(vector<Phrase>& newPhrase,myString& newWord, bool isParent, int pg) {
 
         //set child bool to default 0
         bool isChild=false;
@@ -90,7 +87,25 @@ public:
         cout<<"object fill complete"<<endl;
 
         //push the new phrase object PhraseObj into the vector newPhrase
-        //newPhrase.pushback(PhraseObj);
+        newPhrase.push_back(PhraseObj);
+        cout<<"pushback complete"<<endl;
+    }
+    */
+    Phrase fillObject(myString& newWord, bool isParent, int pg) {
+
+        //set child bool to default 0
+        bool isChild=false;
+
+        //fill in the new object with attributes: myString, bool, bool, int
+        Phrase PhraseObj;
+
+        PhraseObj.setChild(isChild);
+        PhraseObj.setParent(isParent);
+        PhraseObj.setPhrase(newWord);
+        PhraseObj.setNum(pg);
+
+        cout<<"object fill complete"<<endl;
+
         return PhraseObj;
     }
 
@@ -140,12 +155,14 @@ public:
 
         //DSvector to contain myPhrase
         Vector<Phrase> myPhrase;
+        //int PCounter=0;
 
+        //vector<Phrase> phraseVector;
 
 
 
         //iterate through file
-        for (int i = 1; i < 20; i++) {
+        for (int i = 1; i < 14; i++) {
             //read line
             file.getline(temp, 200);
             //char array to myString
@@ -207,8 +224,9 @@ public:
 
                     //use the fill vector function by providing: targeted vector
                     fillVector(myPhrase,tempStr, isParent, tempPG);
+                    
                     //tempPhrase= fillObject(tempStr, isParent, tempPG);
-
+                    //fillTest(phraseVector, tempStr, isParent, tempPG);
                     //get following words
                     word=strtok(NULL," ");
                 }
