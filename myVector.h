@@ -123,6 +123,14 @@ public:
         for (unsigned i=0; i<curr; i++)
         {arr[i]= cpy.arr[i]; }
     }
+    /*
+    Vector(const Vector<Phrase> &cpy) {
+        capacity= cpy.capacity;
+        curr= cpy.curr;
+        arr= new Phrase[capacity];
+        for (unsigned i=0; i<curr; i++)
+        {arr[i]= cpy.arr[i]; }
+    } */
     //copy assignment operator
     Vector <U> &operator= (const Vector<U> &cpy){
         if (this!=cpy) {
@@ -134,7 +142,17 @@ public:
         }
         return *this;
     }
-
+    /*
+    Vector <Phrase> &operator= (const Vector<Phrase> &cpy){
+        if (this!=cpy) {
+            curr= cpy.curr;
+            capacity=  cpy.capacity;
+            arr= new Phrase[capacity];
+            for (unsigned i=0; i<curr; i++)
+            {arr[i]= cpy.arr[i]; }
+        }
+        return *this;
+    }*/
 
 
     //iterator start
@@ -169,9 +187,9 @@ public:
 
 
     //set the val stored at index at ele
-    void set_at(U ele, int index)
+    void set_at(U data, int index)
     {
-        arr[index]= ele;
+        arr[index]= data;
     }
 
     //get element

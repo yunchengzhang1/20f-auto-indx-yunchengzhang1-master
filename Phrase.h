@@ -24,17 +24,32 @@ public:
     Phrase(const myString &phrase, bool parent, bool child, int pageNum): phrase(phrase){}
 
     //operator
-    Phrase& operator= (const Phrase& cpy)
+    Phrase& operator= (const Phrase* cpy)
     {
-        phrase=cpy.phrase;
-        parent=cpy.parent;
-        child=cpy.child;
-        pageNum=cpy.pageNum;
+        phrase=cpy->phrase;
+        parent=cpy->parent;
+        child=cpy->child;
+        pageNum=cpy->pageNum;
         return *this;
     }
 
+    //dynamic destr
+    friend void destruct (Phrase*);
+
+
+
     //destr
     ~Phrase() {}
+
+    //dynamic set
+    void dymSet (myString newStr, bool newP, bool newC, int newN)
+    {
+        phrase= newStr;
+        parent= newP;
+        child= newC;
+        pageNum= newN;
+    }
+
 
     //accessor functions
     void setPhrase(myString &phrase) {
@@ -69,7 +84,12 @@ public:
         return pageNum;
     }
 
+
+
 private:
 
 };
+
+void destruct (Phrase* ptr)
+{delete ptr; }
 #endif //INC_20F_AUTO_IDX_PHRASE_H

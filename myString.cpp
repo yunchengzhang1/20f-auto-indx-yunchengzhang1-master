@@ -88,6 +88,7 @@ myString& myString:: operator=(const char* cstring)
 
 myString& myString:: operator=(const myString& myString)
 {
+    /*
     //cout<<"deallocate array in operator 1"<<endl;
     int index=0;
     //while the data stored in index in this array isn't end character
@@ -96,6 +97,8 @@ myString& myString:: operator=(const myString& myString)
     //plus 1 because starts 0
     index+=1;
     size=index;
+     */
+    size=myString.size;
     //plus 1 for the end char
     array= new char[size+1];
     for (int i=0; i<size; i++)
@@ -185,12 +188,14 @@ void myString:: replaceP(myString& in)
         }
 
         if (in.array[i]=='[') {
-            while (in.array[i]!=']')
+            int j=i;
+            while (in.array[j]!=']')
             {
-                if (in.array[i]==' ')
+                if (in.array[j]==' ')
                 {
-                    in.array[i]='.';
+                    in.array[j]='.';
                 }
+                j++;
             }
         }
 

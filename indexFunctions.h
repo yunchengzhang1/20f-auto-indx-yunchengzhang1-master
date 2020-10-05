@@ -38,7 +38,17 @@ public:
 
     }
     */
-
+    /*
+    bool operator<(const Phrase &x, const Phrase &y)
+    {
+        if (x.phrase != y.phrase)
+        {
+            return x.phrase <y.phrase;
+        }
+        //question: do I need to do the following for bool too?
+        //return x.pgNum <y.pgNum;
+    }
+    */
     void parsingWord(myString* line,char* wordTemp, int i, int j)  //int i and j are always read as 0
     {
 
@@ -52,13 +62,36 @@ public:
 
         //fill in the new object with attributes: myString, bool, bool, int
         Phrase PhraseObj;
-        PhraseObj.phrase= newWord;
-        PhraseObj.parent= isParent;
-        PhraseObj.child= isChild;
-        PhraseObj.pageNum=pg;
+
+        PhraseObj.setChild(isChild);
+        PhraseObj.setParent(isParent);
+        PhraseObj.setPhrase(newWord);
+        PhraseObj.setNum(pg);
+
+        cout<<"object fill complete"<<endl;
 
         //push the new phrase object PhraseObj into the vector newPhrase
-        newPhrase.pushback(PhraseObj);
+        //newPhrase.pushback(PhraseObj);
+    }
+
+    Phrase fillObject(myString& newWord, bool isParent, int pg) {
+
+        //set child bool to default 0
+        bool isChild=false;
+
+        //fill in the new object with attributes: myString, bool, bool, int
+        Phrase PhraseObj;
+
+        PhraseObj.setChild(isChild);
+        PhraseObj.setParent(isParent);
+        PhraseObj.setPhrase(newWord);
+        PhraseObj.setNum(pg);
+
+        cout<<"object fill complete"<<endl;
+
+        //push the new phrase object PhraseObj into the vector newPhrase
+        //newPhrase.pushback(PhraseObj);
+        return PhraseObj;
     }
 
     void editP(char* in)
@@ -71,12 +104,14 @@ public:
             }
 
             if (in[i]=='[') {
-                while (in[i]!=']')
+                int j=i;
+                while (in[j]!=']')
                 {
-                    if (in[i]==' ')
+                    if (in[j]==' ')
                     {
-                        in[i]='.';
+                        in[j]='.';
                     }
+                    j++;
                 }
             }
         }
@@ -99,12 +134,14 @@ public:
 
 
         //open file input01.txt
-        ifstream file("input01.txt");
+        ifstream file("input03.txt");
         char *temp = new char[100];
         char *wordTemp = new char[15];
 
         //DSvector to contain myPhrase
         Vector<Phrase> myPhrase;
+
+
 
 
         //iterate through file
@@ -127,9 +164,11 @@ public:
 
             //extract the value of number inside "<>"
             int page = extractPG(line);
+            int tempPG;
             if (page!=0)
             {
-                cout <<endl<< "page number is: " << page << endl;
+                tempPG= page;
+                cout <<endl<< "page number is: " << tempPG << endl;
             }
             else {cout<<endl<<"string of words: ";}
 
@@ -137,26 +176,44 @@ public:
             //only parse the string of words, but not index
             if (page==0)
             {
+                //allocate new object
+                //Phrase *tempPhrase;
+                //tempPhrase= new Phrase(NULL, false, false, 0);
+
                 //get the first word
+
                 char* word= strtok(temp," ");
                 while (word!=NULL)
                 {
                     bool isParent=false;
 
 
-                    //if detected parent word, set isParent to 1, pass it
+                    //if detected parent word, set isParent to true, pass it
                     if (word[sizeof(word)-1]==')' )
                     {bool isParent=true;}
+
+                    /*
+                    int wordSize= sizeof(word)+1;
+                    char* tempWord;
+                    tempWord[wordSize];
+
+                    for (int i=0; i<wordSize-1; i++){
+                        tempWord[i]=word[i];
+                    }
+                    tempWord[wordSize]='\0'; */
                     myString tempStr= word;
 
                     cout<<tempStr<<" ";
 
                     //use the fill vector function by providing: targeted vector
-                    fillVector(myPhrase,tempStr, isParent, page);
+                    fillVector(myPhrase,tempStr, isParent, tempPG);
+                    //tempPhrase= fillObject(tempStr, isParent, tempPG);
 
                     //get following words
                     word=strtok(NULL," ");
                 }
+
+                //delete tempPhrase;
             }
 
 
