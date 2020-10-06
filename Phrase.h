@@ -14,8 +14,9 @@ class Phrase {
 public:
     myString phrase;
     int pageNum;
-
     double ID;
+    //set < operator
+    bool operator< (const Phrase& rhs)const {return ID<rhs.ID;}
     //default constructor
     Phrase(){}
 
@@ -36,6 +37,7 @@ public:
 
     //destr
     ~Phrase()=default;
+
 
 
 
@@ -65,7 +67,7 @@ public:
         return pageNum;
     }
 
-    //void pushbackPG(int pg)
+
 
 
 

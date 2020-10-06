@@ -14,7 +14,8 @@
 #include "myVector.h"
 #include "indexFunctions.h"
 #include "Phrase.h"
-//#include <vector>
+#include <set>
+#include <unordered_set>
 class indexFunc {
 private:
 
@@ -22,6 +23,7 @@ private:
 
 public:
     Phrase phr;
+
 
 /*
     void readFile()
@@ -219,14 +221,29 @@ public:
         //DSvector to contain myPhrase
         Vector<Phrase> myPhrase;
 
+        //create set to put object into
+        unordered_set<Phrase> phraseSet;
 
 
         //iterate through file
-        for (int i = 1; i < 14; i++) {
+        for (int i = 1; i < 20; i++) {
             //read line
             file.getline(temp, 200);
             //char array to myString
             myString line = temp;
+
+            //extract the value of number inside "<>"
+            int page = extractPG(line);
+            int tempPG;
+            if (page==-1)
+            {break;} //if reaches end of file, break for-loop
+
+            if (page!=0)  //if reaches a page number
+            {
+                tempPG= page;
+                cout <<endl<< "page number is: " << tempPG << endl;
+            }
+            else {cout<<endl<<"string of words: ";}
 
 
             //char array to lowerCase
@@ -247,15 +264,7 @@ public:
             editP(temp);
 
 
-            //extract the value of number inside "<>"
-            int page = extractPG(line);
-            int tempPG;
-            if (page!=0)
-            {
-                tempPG= page;
-                cout <<endl<< "page number is: " << tempPG << endl;
-            }
-            else {cout<<endl<<"string of words: ";}
+
 
 
             //only parse the string of words, but not index
@@ -320,6 +329,17 @@ public:
                 }//end of word!=NULL loop means that if while there are words left in  line
             }//end of if (page!=0) means that if page has phrases
 
+
+            for (const Phrase &p: myPhrase)
+            {
+                phraseSet.insert(p);
+            }
+            for (const Phrase&p: phraseSet)
+            {
+                myString tempString=p.getPhrase();
+                int tempPage=p.getNum();
+                cout<<tempString<<" appears on page "<<tempPage<<endl;
+            }
 
             }//end of run
 
