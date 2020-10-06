@@ -51,16 +51,14 @@ public:
     */
 
     //https://www.youtube.com/watch?v=iPlW5tSUOUM
-    void fillVector(Vector<Phrase>& newPhrase,myString& newWord, bool isParent, int pg) {
+    void fillVector(Vector<Phrase>& newPhrase,myString& newWord, double ID, int pg) {
 
-        //set child bool to default 0
-        bool isChild=false;
 
         //fill in the new object with attributes: myString, bool, bool, int
         Phrase PhraseObj;
 
-        PhraseObj.setChild(isChild);
-        PhraseObj.setParent(isParent);
+
+        PhraseObj.setID(ID);
         PhraseObj.setPhrase(newWord);
         PhraseObj.setNum(pg);
 
@@ -91,31 +89,52 @@ public:
         cout<<"pushback complete"<<endl;
     }
     */
-    Phrase fillObject(myString& newWord, bool isParent, int pg) {
 
-        //set child bool to default 0
-        bool isChild=false;
 
-        //fill in the new object with attributes: myString, bool, bool, int
-        Phrase PhraseObj;
+    double pwrTen (int pwr)
+    {
+        double base=10;
+        double result=1;
+        int ex=pwr;
 
-        PhraseObj.setChild(isChild);
-        PhraseObj.setParent(isParent);
-        PhraseObj.setPhrase(newWord);
-        PhraseObj.setNum(pg);
-
-        cout<<"object fill complete"<<endl;
-
-        return PhraseObj;
+        while (ex!=0)
+        {
+            result*=base;
+            --ex;
+        }
+        return result;
     }
+
+    //pass in a phrase, calculate its ID
+    double calcID (char*in, int page)
+    {
+        int word_size= sizeof(in);
+        double wordID=0.0;
+        for (int i=0; i<(word_size); i++)
+        {
+            //get 2 digit nums that's unique for every alphabet
+            double temp1= (double) (in[i] - '.');  //2 digit
+            int pwr= 99-(2*i);                  //power
+            double powerofTen= pwrTen(pwr);
+            //multiply the 2 digit num stored in temp1 to a 100-(2 i) digits num
+            double temp2= temp1 * powerofTen;
+            wordID+=temp2;
+        }
+        //stored in the "end" of the ID
+        double tempPG= (double) page;
+        wordID+=tempPG;
+
+        return wordID;
+    }
+
 
     void editP(char* in)
     {
         for (int i=0; i<100; i++)
         {
-            if (in[i]=='(')
+            if (in[i]==')')
             {
-                in[i]=' ';
+                in[i]='.';
             }
 
             if (in[i]=='[') {
@@ -128,12 +147,56 @@ public:
                     }
                     j++;
                 }
+                in[i]=' ';
             }
+
+            if (in[i]==']')
+            {in[i]='.';}
         }
     }
 
+    int extractPG(myString &line) {
+        //extractPG used values
+        int indexN = 0;   //index number/digit
+        int indexC = 0;   //index counter
+        int indexV = 0;   //index value
+        int power;
+        int tempInt = 0;
+
+
+        if (line[0] == '<' && line[1] != '-') {
+            indexC = line.getlength() - 1;
+            //actual val of num: line[1] to line[indexC-1]
+            power = 1;
+            for (int p = indexC - 1; p > 0; p--) {
+
+                //cout << line[p ] << endl;  //first loop:1
+
+                indexN = (int) (line[p] - '0');  //line[p] is last digit, power: 10^0
+
+                while (power > 1) {
+                    indexN = indexN*10;
+                    power--;
+                }//while (power)
+                indexV = indexV + indexN;
+                tempInt++;
+                power += tempInt;
+            }//for (p)
+            return indexV;
+        } else if (line[1] == '-') {
+            return -1;
+        } else {
+            return 0;
+        }
+
+    }
+
+
 
     void run() {
+
+
+        double multiplier= pwrTen (2);
 
         //initialize head
         struct node *head = NULL;
@@ -155,10 +218,6 @@ public:
 
         //DSvector to contain myPhrase
         Vector<Phrase> myPhrase;
-        Phrase tempP;
-        //int PCounter=0;
-
-        //vector<Phrase> phraseVector;
 
 
 
@@ -170,7 +229,15 @@ public:
             myString line = temp;
 
 
-
+            //char array to lowerCase
+            int toLower=sizeof(temp);
+            for (int i=0; i<toLower;i++)
+            {
+                if (temp[i]>='A' && temp[i]<='Z')
+                {
+                    temp[i]= temp[i]+ 32;
+                }
+            }
             //all to lowercase
             line.lowerCase();
             //edit punctuations
@@ -192,52 +259,69 @@ public:
 
 
             //only parse the string of words, but not index
-            if (page==0)
-            {
+            if (page==0) {
                 //allocate new object
                 //Phrase *tempPhrase;
                 //tempPhrase= new Phrase(NULL, false, false, 0);
 
                 //get the first word
 
-                char* word= strtok(temp," ");
-                while (word!=NULL)
-                {
-                    bool isParent=false;
+                char *word = strtok(temp, " ");
+
+                while (word != NULL) {
+
+                    int word_size = sizeof(word);
+                    double fullID = 0;
+                    double multiplier= pwrTen (100);
+
+                    char *tempWord= word;
 
 
                     //if detected parent word, set isParent to true, pass it
-                    if (word[sizeof(word)-1]==')' )
-                    {bool isParent=true;}
+                    if (tempWord[word_size-1] == '.') {
+                        //when pass in child(parent
+                        //parse them by '('
+                        char *childTmp = strtok(tempWord, "(");
+                        char *parentTmp = strtok(NULL, "(");
+                        //calculate childID= calcID(childTmp)
+                        double childID= calcID(childTmp, page);
+                        //calculate parentID= calcID(parentTmp)
+                        //          parentID= parentID * multiplier
+                        double parentID= calcID(parentTmp, page);
+                        parentID= parentID * multiplier;
+                        //calculate the full child ID= parentID+ childID
+                        childID=parentID+ childID;
+                        //acquire myString for parent and child to pass
+                        myString parentStr= parentTmp;
+                        myString childStr = childTmp;
+                        //fill vector with data
+                        fillVector (myPhrase, parentStr, parentID, page);
+                        fillVector (myPhrase, childStr , childID, page);
 
-                    /*
-                    int wordSize= sizeof(word)+1;
-                    char* tempWord;
-                    tempWord[wordSize];
-
-                    for (int i=0; i<wordSize-1; i++){
-                        tempWord[i]=word[i];
                     }
-                    tempWord[wordSize]='\0'; */
-                    myString tempStr= word;
+                    else{
+                        fullID= calcID(word, page);
+                        fullID= fullID * multiplier;
+                        myString tempStr = word;
+                        fillVector (myPhrase, tempStr, fullID, page);
+                    }
 
-                    cout<<tempStr<<" ";
 
-                    //use the fill vector function by providing: targeted vector
-                    fillVector(myPhrase,tempStr, isParent, tempPG);
 
+                    myString tempStr = word;
+
+                    cout << tempStr << " ";
 
 
                     //tempPhrase= fillObject(tempStr, isParent, tempPG);
                     //fillTest(phraseVector, tempStr, isParent, tempPG);
                     //get following words
-                    word=strtok(NULL," ");
-                }//end of word!=NULL loop
+                    word = strtok(NULL, " ");
+                }//end of word!=NULL loop means that if while there are words left in  line
+            }//end of if (page!=0) means that if page has phrases
 
-                tempP=myPhrase.get(2);
-                cout<<"what is tempP"<<endl;
-                //delete tempPhrase;
-            }
+
+            }//end of run
 
 
 
@@ -300,47 +384,13 @@ public:
             //cout<<LinkedList<<endl;
 
 
-
-        }
         file.close();
-};
-
-    int extractPG(myString &line) {
-        //extractPG used values
-        int indexN = 0;   //index number/digit
-        int indexC = 0;   //index counter
-        int indexV = 0;   //index value
-        int power;
-        int tempInt = 0;
-
-
-        if (line[0] == '<' && line[1] != '-') {
-            indexC = line.getlength() - 1;
-            //actual val of num: line[1] to line[indexC-1]
-            power = 1;
-            for (int p = indexC - 1; p > 0; p--) {
-
-                //cout << line[p ] << endl;  //first loop:1
-
-                indexN = (int) (line[p] - '0');  //line[p] is last digit, power: 10^0
-
-                while (power > 1) {
-                    indexN = indexN*10;
-                    power--;
-                }//while (power)
-                indexV = indexV + indexN;
-                tempInt++;
-                power += tempInt;
-            }//for (p)
-            return indexV;
-        } else if (line[1] == '-') {
-            return -1;
-        } else {
-            return 0;
         }
 
-    }
 };
+
+
+
 
 
 

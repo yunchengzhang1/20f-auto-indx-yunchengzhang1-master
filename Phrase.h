@@ -15,14 +15,14 @@ public:
     myString phrase;
     int pageNum;
 
-    bool parent;
-    bool child;
+    double ID;
     //default constructor
     Phrase(){}
 
     //overload
-    Phrase(const myString &phrase, bool parent, bool child, int pageNum): phrase(phrase){}
+    Phrase(const myString &phrase, double ID, int pageNum): phrase(phrase){}
 
+    /*
     //operator
     Phrase& operator= ( Phrase cpy)
     {
@@ -31,24 +31,12 @@ public:
         child=cpy.getChild();
         pageNum=getNum();
         return *this;
-    }
-
-    //dynamic destr
-    friend void destruct (Phrase*);
-
+    }*/
 
 
     //destr
     ~Phrase()=default;
 
-    //dynamic set
-    void dymSet (myString newStr, bool newP, bool newC, int newN)
-    {
-        phrase= newStr;
-        parent= newP;
-        child= newC;
-        pageNum= newN;
-    }
 
 
     //accessor functions
@@ -56,13 +44,10 @@ public:
         Phrase::phrase=phrase;
     }
 
-    void setParent(bool parent){
-        Phrase::parent=parent;
+    void setID(double ID){
+        Phrase::ID=ID;
     }
 
-    void setChild(bool child){
-        Phrase::child=child;
-    }
 
     void setNum(int pageNum){
         Phrase::pageNum=pageNum;
@@ -72,17 +57,15 @@ public:
         return phrase;
     }
 
-    bool getParent(){
-        return parent;
-    }
-
-    bool getChild(){
-        return child;
+    bool getID(){
+        return ID;
     }
 
     int getNum(){
         return pageNum;
     }
+
+    //void pushbackPG(int pg)
 
 
 
