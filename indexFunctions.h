@@ -222,7 +222,7 @@ public:
         Vector<Phrase> myPhrase;
 
         //create set to put object into
-        unordered_set<Phrase> phraseSet;
+        set<Phrase> phraseSet;
 
 
         //iterate through file
@@ -334,13 +334,16 @@ public:
             {
                 phraseSet.insert(p);
             }
+
+
+            /*
             for (const Phrase&p: phraseSet)
             {
                 myString tempString=p.getPhrase();
-                int tempPage=p.getNum();
+                int tempPage       =p.getNum();
                 cout<<tempString<<" appears on page "<<tempPage<<endl;
             }
-
+            */
             }//end of run
 
 
